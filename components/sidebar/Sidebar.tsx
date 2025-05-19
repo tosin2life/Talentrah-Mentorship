@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { SidebarNav, bottomNavItems, NavItem } from "./SidebarNav";
 import { SidebarFooter } from "./SidebarFooter";
 import { SidebarCredits } from "./SidebarCredits";
+import { usePathname } from "next/navigation";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   // Handle clicks outside sidebar on mobile
   useEffect(() => {
@@ -74,7 +76,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           <div className="mt-[300px]">
             <nav className="space-y-1.5 px-3 pt-4">
               {bottomNavItems.map((item) => (
-                <NavItem key={item.href} item={item} isActive={false} />
+                <NavItem
+                  key={item.href}
+                  item={item}
+                  isActive={pathname === item.href}
+                />
               ))}
             </nav>
             <SidebarCredits />

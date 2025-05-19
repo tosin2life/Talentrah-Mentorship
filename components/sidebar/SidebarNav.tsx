@@ -84,10 +84,8 @@ function NavItem({ item, isActive }: { item: NavItem; isActive: boolean }) {
       href={item.href}
       className={cn(
         "flex items-center gap-3 rounded-md px-3 py-2.5 text-xs font-medium transition-all duration-200",
-        item.isPrimary
+        isActive
           ? "bg-blue-600 text-white hover:bg-blue-700"
-          : isActive
-          ? "bg-gray-200 text-gray-900"
           : "text-gray-600 hover:bg-gray-200 hover:text-gray-900"
       )}
     >
