@@ -1,0 +1,28 @@
+import React from "react";
+
+export default function Stars(props: {
+  className?: string;
+  color?: string;
+  filled?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+}) {
+  return (
+    <svg
+      width="39"
+      height="37"
+      viewBox="0 0 39 37"
+      xmlns="http://www.w3.org/2000/svg"
+      className={props.className}
+      style={props.color ? { color: props.color } : undefined}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
+    >
+      <path
+        d="M23.5146 13.9746L23.627 14.3193H36.9824L26.4717 21.9561L26.1777 22.1699L26.29 22.5156L30.3037 34.8701L19.7939 27.2344L19.5 27.0215L19.2061 27.2344L8.69531 34.8701L12.71 22.5156L12.8223 22.1699L12.5283 21.9561L2.01758 14.3193H15.373L15.4854 13.9746L19.5 1.61719L23.5146 13.9746Z"
+        fill={props.filled ? "currentColor" : "none"}
+        stroke="currentColor"
+      />
+    </svg>
+  );
+}

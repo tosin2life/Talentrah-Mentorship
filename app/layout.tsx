@@ -26,11 +26,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarLayout>
-            {" "}
-            <Header />
-            {children}
-          </SidebarLayout>
+          <SidebarLayout>{children}</SidebarLayout>
         </ThemeProvider>
       </body>
     </html>

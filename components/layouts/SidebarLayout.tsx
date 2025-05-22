@@ -2,58 +2,68 @@
 
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/sidebar/Sidebar";
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Header } from "@/components/Header";
 
 export default function SidebarLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   // Handle responsive behavior
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
-      setIsSidebarOpen(window.innerWidth >= 768);
+      if (window.innerWidth >= 768) setIsSidebarOpen(false);
     };
-
-    // Check on mount
     checkScreenSize();
-
-    // Add event listener
     window.addEventListener("resize", checkScreenSize);
-
-    // Clean up
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  // Lock background scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isMobile && isSidebarOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    // Clean up on unmount
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isMobile, isSidebarOpen]);
+
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Mobile menu button */}
-      {isMobile && (
-        <Button
-          variant="ghost"
-          size="icon"
-          className="fixed top-4 left-4 z-50 md:hidden"
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+      {/* Sidebar: always at the left, full height, no top padding */}
+      {!isMobile && (
+        <div className="w-[280px] h-screen">
+          <Sidebar isOpen={true} onClose={() => {}} />
+        </div>
       )}
-
-      {/* Sidebar: remove fixed, use normal flow */}
-      <div className="w-[280px]">
-        <Sidebar
-          isOpen={isSidebarOpen || !isMobile}
-          onClose={() => isMobile && setIsSidebarOpen(false)}
-        />
+      {/* Sidebar overlay for mobile */}
+      {isMobile && isSidebarOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-30 z-50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          {/* Sidebar overlay, scrollable */}
+          <div className="fixed top-0 left-0 h-full w-[280px] bg-white-default shadow-lg z-50 animate-slide-in overflow-y-auto md:hidden">
+            <Sidebar isOpen={true} onClose={() => setIsSidebarOpen(false)} />
+          </div>
+        </>
+      )}
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Header: in normal flow, not sticky or fixed */}
+        <Header onMenuClick={() => setIsSidebarOpen(true)} />
+        <main className="flex-1">{children}</main>
       </div>
-
-      {/* Main content */}
-      <main className="flex-1">{children}</main>
     </div>
   );
 }

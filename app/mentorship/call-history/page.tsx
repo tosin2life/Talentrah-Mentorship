@@ -90,15 +90,15 @@ export default function CallHistoryPage() {
   };
 
   return (
-    <div className="flex flex-col bg-white-background px-2 rounded-lg min-h-screen ">
-      <header className="flex items-center justify-between w-full mb-8">
-        <h1 className="font-medium text-black text-[16px] leading-5">
+    <div className="flex flex-col bg-white-background px-2 sm:px-4 md:px-8 rounded-lg min-h-screen ">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full mb-4 sm:mb-8 gap-2 sm:gap-0">
+        <h1 className="font-medium text-black text-lg sm:text-xl md:text-2xl leading-5">
           Mentorship call history
         </h1>
       </header>
-      <div className="flex justify-between gap-4 mb-6">
-        <div className="flex gap-4  relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-4 mb-6">
+        <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-4 relative w-full sm:w-auto">
+          <span className="absolute left-3 top-3 sm:top-1/2 sm:-translate-y-1/2 pointer-events-none">
             <Image
               src="/icons/search-normal.svg"
               alt="search"
@@ -112,15 +112,15 @@ export default function CallHistoryPage() {
             placeholder="Search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border border-gray-200 rounded-xl pl-10 pr-4 py-1 w-64 focus:outline-none h-10"
+            className="border border-gray-200 rounded-xl pl-10 pr-4 py-2 w-full sm:w-64 focus:outline-none h-10 text-sm"
           />
-          <div className="relative" ref={dropdownRef}>
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+          <div className="relative w-full sm:w-auto" ref={dropdownRef}>
+            <span className="absolute left-3 top-3 sm:top-1/2 sm:-translate-y-1/2 pointer-events-none">
               <Image src="/icons/sort.svg" alt="sort" width={16} height={16} />
             </span>
             <button
               type="button"
-              className="w-[150px] h-10 bg-white-default border border-gray-200 rounded-xl px-4 pl-8 text-left text-sm text-gray-700 font-normal flex items-center shadow focus:outline-none"
+              className="w-full sm:w-[150px] h-10 bg-white-default border border-gray-200 rounded-xl px-4 pl-8 text-left text-sm text-gray-700 font-normal flex items-center shadow focus:outline-none"
               onClick={() => setDropdownOpen((open) => !open)}
               tabIndex={0}
             >
@@ -140,7 +140,7 @@ export default function CallHistoryPage() {
               </svg>
             </button>
             {dropdownOpen && (
-              <div className="absolute z-10 mt-2 w-[225px] right-0 bg-white-default rounded-xl shadow-lg py-2">
+              <div className="absolute z-10 mt-2 w-full sm:w-[225px] right-0 bg-white-default rounded-xl shadow-lg py-2">
                 {["All", "Ongoing", "Upcoming", "Completed"].map((option) => (
                   <button
                     key={option}
@@ -168,44 +168,58 @@ export default function CallHistoryPage() {
         <Button
           variant="default"
           size="sm"
-          className="flex gap-4 py-4 px-8 rounded-xl"
+          className="flex gap-4 py-3 px-6 sm:py-4 sm:px-8 rounded-xl w-full sm:w-auto justify-center"
         >
           + <span>Schedule call</span>
         </Button>
       </div>
 
-      <div className="flex flex-col gap-6 w-full rounded-lg">
+      <div className="flex flex-col gap-4 sm:gap-6 w-full rounded-lg">
         {paginatedCalls.length === 0 ? (
           <div className="text-gray-400 text-center py-12">No calls found.</div>
         ) : (
           paginatedCalls.map((call) => (
             <div
               key={call.id}
-              className="flex flex-col sm:flex-row sm:items-center justify-between bg-white-default rounded-lg shadow-sm px-6 py-4 border border-gray-100"
+              className="flex flex-col sm:flex-row sm:items-center justify-between bg-white-default rounded-lg shadow-sm px-4 sm:px-6 py-3 sm:py-4 border border-gray-100 gap-2"
             >
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-normal text-black text-base">
-                    {call.name}
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  {/* Left: name and status tag */}
+                  <span className="flex items-center gap-2">
+                    <span className="font-normal text-black text-xs sm:text-lg">
+                      {call.name}
+                    </span>
+                    <span
+                      className={`sm:text-xs text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                        statusStyles[call.status as keyof typeof statusStyles]
+                      }`}
+                    >
+                      {call.status}
+                    </span>
                   </span>
-                  <span
-                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                      statusStyles[call.status as keyof typeof statusStyles]
-                    }`}
-                  >
-                    {call.status}
-                  </span>
+                  {/* Mobile: Join call at extreme right */}
+                  {call.status === "Upcoming" && (
+                    <a
+                      href="#"
+                      onClick={handleJoinCallClick}
+                      className="text-blue-button font-medium text-xs hover:underline sm:hidden"
+                    >
+                      Join call
+                    </a>
+                  )}
                 </div>
-                <div className="text-gray-500 text-[10px] font-normal">
+                <div className="text-gray-500 text-[10px] sm:text-xs font-normal">
                   Meeting type: {call.meetingType} &nbsp; | &nbsp; Call date:{" "}
                   {call.callDate} &nbsp; | &nbsp; Duration: {call.duration}
                 </div>
               </div>
+              {/* Desktop: join call on the right */}
               {call.status === "Upcoming" && (
                 <a
                   href="#"
                   onClick={handleJoinCallClick}
-                  className="text-blue-button font-medium text-sm mt-2 sm:mt-0 hover:underline"
+                  className="hidden sm:block text-blue-button font-medium text-sm mt-2 sm:mt-0 hover:underline"
                 >
                   Join call
                 </a>
@@ -215,11 +229,11 @@ export default function CallHistoryPage() {
         )}
       </div>
       {/* Custom Pagination */}
-      <div className="flex items-center gap-2 m-8 justify-center">
+      <div className="flex flex-wrap items-center gap-2 m-4 sm:m-8 justify-center">
         <button
           onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={page === 1}
-          className="w-8 h-8 flex items-center justify-center rounded-lg border bg-white-default text-gray-600 disabled:opacity-50"
+          className="w-8 h-8 flex items-center justify-center rounded-lg border bg-white-default text-gray-600 disabled:opacity-50 text-[12px] md:text-base"
         >
           &lt;
         </button>
@@ -238,14 +252,17 @@ export default function CallHistoryPage() {
           }
           return pages.map((p, idx) =>
             p === "..." ? (
-              <span key={idx} className="px-2 text-gray-400">
+              <span
+                key={idx}
+                className="px-2 text-gray-400 text-[12px] md:text-base"
+              >
                 ...
               </span>
             ) : (
               <button
                 key={p}
                 onClick={() => setPage(p as number)}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-colors ${
+                className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-colors text-[12px] md:text-base ${
                   p === page
                     ? "bg-blue-600 text-white border-blue-600"
                     : "bg-white-default text-gray-700 border-gray-200"
@@ -259,7 +276,7 @@ export default function CallHistoryPage() {
         <button
           onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
           disabled={page === totalPages}
-          className="w-8 h-8 flex items-center justify-center rounded-lg border bg-white-default text-gray-600 disabled:opacity-50"
+          className="w-8 h-8 flex items-center justify-center rounded-lg border bg-white-default text-gray-600 disabled:opacity-50 text-[12px] md:text-base"
         >
           &gt;
         </button>

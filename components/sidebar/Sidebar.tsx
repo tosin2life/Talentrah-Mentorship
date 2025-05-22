@@ -72,20 +72,19 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         {/* Credits section */}
-        <div>
-          <div className="mt-[300px]">
-            <nav className="space-y-1.5 px-3 pt-4">
-              {bottomNavItems.map((item) => (
-                <NavItem
-                  key={item.href}
-                  item={item}
-                  isActive={pathname === item.href}
-                />
-              ))}
-            </nav>
-            <SidebarCredits />
-            <SidebarFooter />
-          </div>
+
+        <div className="mt-[300px] bg-white-default">
+          <nav className="space-y-1.5 px-3 pt-4">
+            {bottomNavItems.map((item) => (
+              <NavItem
+                key={item.href}
+                item={item}
+                isActive={pathname === item.href}
+              />
+            ))}
+          </nav>
+          <SidebarCredits />
+          <SidebarFooter />
         </div>
       </aside>
     </>
